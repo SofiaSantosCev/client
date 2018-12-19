@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CATEGORY</title>
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<h1>GPASS</h1>
+		<h2>CATEGORIES</h2>
+		<div class="form">
+			<form id="form">
+				<input type="text" placeholder="new category name" class="redondeado" name="name" required id="name"><br><br>
+				<input type="submit" onclick="create()" value="crear categoria">	
+			</form>
+
+		</div>
+		<div id="">
+		<div class="category"></div>
+	</body>
+
+	<script type="text/javascript">
+		
+		$("#form").submit(function(e){
+			e.preventDefault();
+		});
+		var token = localStorage.getItem("token"); 
+		var name = document.getElementById("name").value;
+		//comprobar token
+
+		$.ajax({
+			url:"http://localhost:8888/GPASS/server/public/api/categories",
+			type: "GET",
+
+			headers:{
+				'Authorization' : token
+			},
+
+			success: function(response){
+				var categories = response.categories;
+				var ids = response.ids;
+				showCategories(categories, ids);
+			},
+				
+			error: function() {
+				console.log("Error :(");
+			}
+		});
+
+		function create() { 
+			
+			$.ajax({
+				url:"http://localhost:8888/GPASS/server/public/api/categories",
+				type: "POST",
+
+				headers: {
+					'Authorization': token
+				},
+
+				data:{
+					'name': name,
+				},
+
+				success: function(response){
+					var categories = response.categories;
+					var ids = response.ids;
+					showCategories(categories, ids);
+				},
+				
+				error: function(response) {
+					console.log(response.responseText);
+				}
+			});
+		}
+
+
+		function showCategories(categories, ids){ 
+			
+			for(var category in categories) {
+				$('#categoriesList').append('<div class="category">'+categories[category]+'<button id="categoriesbtn"' + ids[category]+'"onclick="deleteCategory('+ids[category]+')>Borrar</button></div><br>');
+			}
+		}
+
+	</script>
+</html>
