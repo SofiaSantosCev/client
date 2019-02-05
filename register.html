@@ -2,21 +2,38 @@
 <html>
 <head>
 	<title>Register</title>
-	<link rel="stylesheet" type="text/css" href="main.css" media="screen">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Staatliches|Ubuntu" rel="stylesheet">
 	<meta charset="utf-8">
 </head>
 
-<body>
-	<h1>GPASS</h1>
-	<h2>REGISTER</h2>
-	<form id="form">
-    	<input type="text" name="name" required id="name" placeholder="Sofia"> <br><br>
-    	<input type="email" name="email" required id="email" placeholder="example@mail.com"><br><br>
-    	<input type="password" name="password" required id="password" placeholder="12345678"> <br><br>
-    	<input type="submit" onclick="saveData()" class="button">
+<body style="background: url('blur.jpg');">
+	
+	<img src="logo.png " class="rounded mx-auto d-block mt-5" style="width: 10%">
+	<h3 class="text-center">REGISTER</h3>
+	<form id="form" method="POST" class="container mx-auto d-block mt-5" style="width:20%">
+		<div class="form-group">
+			<label for="name">Name</label>
+			<input type="text" class="form-control" name="name" required id="name" placeholder="name">
+		</div>
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input type="email" class="form-control" name="email" required id="email" placeholder="example@mail.com">
+		</div>
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input type="password" class="form-control" id="password" placeholder="Password">
+			<small id="passwordHelpInline" class="text-muted">Must be 8-20 characters long.</small>
+		</div>
+		
+		<a class="rounded mx-auto d-block mb-5 text-center" href="recovery.html">Forgot your password?</a>
+		<button type="submit" id="button" class="btn btn-primary mx-auto d-block">Sign up</button>
+		<a class="btn mx-auto d-block mt-5 text-center text-white" href="login.html">Login</a>
+		<p id="error" class="hidden, error" ></p>
 	</form>
-
+	
+	
 </body>
 
 <script type="text/javascript">
@@ -24,9 +41,36 @@
 	e.preventDefault();
 	});
 
-	function myFunction(){
-		var name = document.createElement("name");
-	}
+	$(document).ready(function(){
+		$('#button').click(function(){
+			var name = $("#name").val();
+            var email = $("#email").val();
+            var password = $("#password").val();
+
+            $.ajax({
+				url:"http://localhost:8888/server/public/api/register",
+				type: "POST",
+
+				data:{
+					'user': name,
+					'email': email,
+					'password': password
+				},
+
+				success: function(response){
+					var token = response.token;
+					localStorage.setItem("token", token);
+					window.location = 'categories.html';
+				},
+
+				error: function(response) {
+					console.log(response.responseJSON.text);           
+                    $('#error').text(response.responseJSON.text);
+                    $('#error').removeClass('hidden');
+				}
+			});
+		});
+	});
 
 	function saveData() {
 		var name = document.getElementById("name").value;
@@ -34,7 +78,7 @@
 		var password = document.getElementById("password").value;
 		
 		$.ajax({
-			url:"http://localhost:8888/GPASS/server/public/api/register",
+			url:"http://localhost:8888/server/public/api/register",
 			type: "POST",
 
 			data:{
@@ -45,7 +89,7 @@
 
 			success: function(){
 				console.log("User registered :)");
-				window.location = 'login.html';
+				window.location = 'categories.html';
 			},
 
 			error: function() {

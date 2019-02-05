@@ -6,17 +6,16 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
-		<h1>GPASS</h1>
-		<h2>CATEGORIES</h2>
-		<div class="form">
-			<form id="form">
-				<input type="text" placeholder="new category name" class="redondeado" name="name" required id="name"><br><br>
-				<input type="submit" onclick="create()" value="crear categoria">	
-			</form>
+		<img src="logo.png">
+		<h1>CATEGORIES</h1>
+		<form id="form">
+			<input type="text" placeholder="new category name" required id="name"><br><br>
+			<input type="submit" onclick="create()" value="crear categoria">	
+		</form>
 
-		</div>
-		<div id="">
-		<div class="category"></div>
+		<div id="categoriesList"></div>
+		<p id="error" class="hidden, error"></p>
+		
 	</body>
 
 	<script type="text/javascript">
@@ -24,12 +23,16 @@
 		$("#form").submit(function(e){
 			e.preventDefault();
 		});
-		var token = localStorage.getItem("token"); 
-		var name = document.getElementById("name").value;
+
+		if(!localStorage.getItem("token")){
+       		window.location = 'login.html';
+    	} 
+		var token = localStorage.getItem("token");
+
 		//comprobar token
 
 		$.ajax({
-			url:"http://localhost:8888/GPASS/server/public/api/categories",
+			url:"http://localhost:8888/server/public/api/categories",
 			type: "GET",
 
 			headers:{
@@ -42,15 +45,17 @@
 				showCategories(categories, ids);
 			},
 				
-			error: function() {
-				console.log("Error :(");
+			error: function(response) {
+				console.log(response.responseJSON.text);
+				$('#error').text(response.responseJSON.text);
+				$('#error').removeClass('hidden');
 			}
 		});
 
 		function create() { 
-			
+			var name = $('#name').val();
 			$.ajax({
-				url:"http://localhost:8888/GPASS/server/public/api/categories",
+				url:"http://localhost:8888/server/public/api/categories",
 				type: "POST",
 
 				headers: {
@@ -62,13 +67,14 @@
 				},
 
 				success: function(response){
-					var categories = response.categories;
-					var ids = response.ids;
-					showCategories(categories, ids);
+					location.reload();
+					console.log(response.responseText);
 				},
 				
 				error: function(response) {
-					console.log(response.responseText);
+					console.log(response.responseJSON.text);
+					$('#error').text(response.responseJSON.text);
+					$('#error').removeClass('hidden');
 				}
 			});
 		}
@@ -77,9 +83,9 @@
 		function showCategories(categories, ids){ 
 			
 			for(var category in categories) {
-				$('#categoriesList').append('<div class="category">'+categories[category]+'<button id="categoriesbtn"' + ids[category]+'"onclick="deleteCategory('+ids[category]+')>Borrar</button></div><br>');
-			}
-		}
+				$('#categoriesList').append('<div class="category" id="category'+ ids[category]+'"> '+ categories[category]+ '<button class="delBtn" id="categoryDelBtn'+ ids[category]+'" onClick="deleteCategory('+ids[category]+')">Borrar</button> <button class="modBtn" id="categoryModBtn'+ ids[category]+'" onClick="modifyCategory('+ids[category]+')">Modificar</button> </div> <br>');
+            }
+        }
 
 	</script>
 </html>
