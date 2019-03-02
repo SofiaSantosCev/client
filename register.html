@@ -3,37 +3,37 @@
 <head>
 	<title>Register</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Staatliches|Ubuntu" rel="stylesheet">
 	<meta charset="utf-8">
 </head>
 
-<body style="background: url('blur.jpg');">
-	
-	<img src="logo.png " class="rounded mx-auto d-block mt-5" style="width: 10%">
-	<h3 class="text-center">REGISTER</h3>
-	<form id="form" method="POST" class="container mx-auto d-block mt-5" style="width:20%">
-		<div class="form-group">
-			<label for="name">Name</label>
-			<input type="text" class="form-control" name="name" required id="name" placeholder="name">
+<body>
+	<div class="container">
+		
+		<div id="leftDiv">
+			<h1>GPASS</h1>
 		</div>
-		<div class="form-group">
-			<label for="email">Email</label>
-			<input type="email" class="form-control" name="email" required id="email" placeholder="example@mail.com">
-		</div>
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input type="password" class="form-control" id="password" placeholder="Password">
-			<small id="passwordHelpInline" class="text-muted">Must be 8-20 characters long.</small>
+		<div id="rightDiv">	
+			<form id="form">
+				<h2>Register</h2>
+				<div class="form-group">
+		    		<input type="name" placeholder="name" required id="name">
+		    	</div>
+				<div class="form-group">
+		    		<input type="email" placeholder="email" required id="email">
+		    	</div>
+		    	<div class="form-group">
+		    		<input placeholder="password" required id="password" type="password" >
+		    	</div>
+		    	<button id="button" type="submit" class="customBtn">submit</button>
+		    	<div><a href="login.html">Login</a></div>
+		    	<p id="error" class="hidden, error" ></p>
+			</form>
 		</div>
 		
-		<a class="rounded mx-auto d-block mb-5 text-center" href="recovery.html">Forgot your password?</a>
-		<button type="submit" id="button" class="btn btn-primary mx-auto d-block">Sign up</button>
-		<a class="btn mx-auto d-block mt-5 text-center text-white" href="login.html">Login</a>
-		<p id="error" class="hidden, error" ></p>
-	</form>
-	
-	
+	</div>
 </body>
 
 <script type="text/javascript">
@@ -48,11 +48,11 @@
             var password = $("#password").val();
 
             $.ajax({
-				url:"http://localhost:8888/server/public/api/register",
+				url:"http://localhost/gpass-server/public/index.php/api/register",
 				type: "POST",
 
 				data:{
-					'user': name,
+					'name': name,
 					'email': email,
 					'password': password
 				},
@@ -78,7 +78,7 @@
 		var password = document.getElementById("password").value;
 		
 		$.ajax({
-			url:"http://localhost:8888/server/public/api/register",
+			url:"http://localhost/gpass-server/public/index.php/api/register",
 			type: "POST",
 
 			data:{

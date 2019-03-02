@@ -3,18 +3,49 @@
 	<head>
 		<title>CATEGORY</title>
 		<link rel="stylesheet" type="text/css" href="main.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
-		<img src="logo.png">
-		<h1>CATEGORIES</h1>
-		<form id="form">
-			<input type="text" placeholder="new category name" required id="name"><br><br>
-			<input type="submit" onclick="create()" value="crear categoria">	
-		</form>
+		<!-- NAVBAR -->
+		<nav class="navbar bg-dark text-white">
+			<a class="navbar-brand">GPASS</a>
+			<a href="passwords.html">Passwords</a>
+			<a href="categories.html">Categories</a>
+			<a class="btn btn-default text-white my-2 my-sm-0" onclick="logOut()" href="login.html">Logout</a>
+		</nav>
 
-		<div id="categoriesList"></div>
-		<p id="error" class="hidden, error"></p>
+
+		<!-- CREATE CATEGORY -->
+		<div id="container">
+			<div class="container">
+				<form id="form" class="form-inline">
+					<div class="form-group mb-2">
+						<input type="text" placeholder="new category name" required id="name" class="form-control">
+					</div>
+					<button type="submit" onclick="create()" id="button" class="btn btn-warning">Create category</button>
+					<p id="error" class="hidden, error"></p>	
+				</form>
+			</div>
+			
+
+		<!-- CATEGORIES LIST -->
+			<div class="container">
+				<table id="categoryList" class="table table-hover table-light" style="background-color: white" >
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">New name</th>
+							<th scope="col"></th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Filas de categorias  -->
+					</tbody>
+				</table>
+			</div>
+		</div>
 		
 	</body>
 
@@ -32,7 +63,7 @@
 		//comprobar token
 
 		$.ajax({
-			url:"http://localhost:8888/server/public/api/categories",
+			url:"http://localhost/gpass-server/public/index.php/api/categories",
 			type: "GET",
 
 			headers:{
@@ -41,25 +72,24 @@
 
 			success: function(response){
 				var categories = response.categories;
-				var ids = response.ids;
-				showCategories(categories, ids);
+				showCategories(categories);
 			},
 				
 			error: function(response) {
-				console.log(response.responseJSON.text);
+				console.log("error");
 				$('#error').text(response.responseJSON.text);
 				$('#error').removeClass('hidden');
 			}
 		});
 
 		function create() { 
-			var name = $('#name').val();
+			var name = $("#name").val();
 			$.ajax({
-				url:"http://localhost:8888/server/public/api/categories",
+				url:"http://localhost/gpass-server/public/index.php/api/categories",
 				type: "POST",
 
 				headers: {
-					'Authorization': token
+					'Authorization': localStorage.getItem("token")
 				},
 
 				data:{
@@ -79,12 +109,43 @@
 			});
 		}
 
+		function modify($id){
+			var newName = $("#newName"+$id).val();
+			console.log($("#newName"+$id).val());
 
-		function showCategories(categories, ids){ 
-			
-			for(var category in categories) {
-				$('#categoriesList').append('<div class="category" id="category'+ ids[category]+'"> '+ categories[category]+ '<button class="delBtn" id="categoryDelBtn'+ ids[category]+'" onClick="deleteCategory('+ids[category]+')">Borrar</button> <button class="modBtn" id="categoryModBtn'+ ids[category]+'" onClick="modifyCategory('+ids[category]+')">Modificar</button> </div> <br>');
-            }
+			$.ajax({
+				url:"http://localhost/gpass-server/public/index.php/api/categories/"+$id,
+				type: "PUT",
+
+				headers: {
+					'Authorization': localStorage.getItem("token")
+				},
+
+				data:{
+					'name': newName,
+				},
+
+				success: function(response){
+					location.reload();
+					console.log(response.responseText);
+				},
+				
+				error: function(response) {
+					console.log(response.responseJSON.text);
+					$('#error').text(response.responseJSON.text);
+					$('#error').removeClass('hidden');
+				}
+			})
+		}
+
+		function showCategories(categories){ 
+			if(categories == null){
+			$('#categoryList').append('<div><p>Theres no categories created yet</p></div>')
+			}
+
+			for(var category in categories){
+			$('#categoryList').append('<tr><td>'+categories[category].name+'</td><td><input type="text" class="form-control" id="newName'+categories[category].id+'" value='+categories[category].name+'></td><td><button  id="modifyButton" onclick="modify('+categories[category].id+')" class="btn btn-primary">Modify</button></td><td><button id="deleteButton'+categories[category].id+'" onclick="delete('+categories[category].id+')" class="btn btn-danger">Delete</button></td></tr>');
+			}
         }
 
 	</script>

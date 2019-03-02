@@ -3,19 +3,34 @@
 <head>
 	<title>LOGIN</title>
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
-	<img src="logo.png">
-	<h1>LOGIN</h1>
-	<form id="form">
-
-    	<input type="email" placeholder="Enter Email" name="email" class="redondeado" required id="email"><br><br>
-    	<input type="password" placeholder="Enter Password" class="redondeado" name="password" required id="password"> <br><br>
-    	<button id="button ">Login</button>
-    	<p id="error" class="hidden, error" ></p>
+<body>
+	<div class="container">
 		
-	</form>
+		<div id="leftDiv">
+			<h1>GPASS</h1>
+		</div>
+		<div id="rightDiv">	
+			<form id="form">
+				<h2>Login</h2>
+				<div class="form-group">
+		    		<input type="email" placeholder="email" required id="email">
+		    	</div>
+		    	<div class="form-group">
+		    		<input placeholder="password" required id="password" type="password" >
+		    	</div>
+		    	<button id="customBtn" type="submit" class="btn" >submit</button>
+		    	<div><a href="register.html">Register</a></div>
+		    	
+		    	<p id="error" class="hidden, error"></p>
 
+			</form>
+		</div>
+		
+	</div>
 </body>
 
 <script type="text/javascript">
@@ -26,13 +41,13 @@
 
 	$(document).ready(function(){
 
-		$('#button').click(function(){
+		$('#customBtn').click(function(){
 			
 			var email = $('#email').val();
 			var password = $("#password").val();
 			
 			$.ajax({
-				url:"http://localhost:8888/server/public/api/login",
+				url:"http://localhost/gpass-server/public/index.php/api/login",
 				type: "POST",
 
 				data:{
@@ -44,7 +59,7 @@
 					console.log(response);
 					var token = response.token;
 					localStorage.setItem("token", token);
-					window.location = 'categories.html';
+					window.location = 'passwords.html';
 				},
 				
 				error: function(response) {
@@ -53,7 +68,7 @@
 					$('#error').removeClass('hidden');
 				}
 			});
-		}
+		});
 	});
 
 </script>
