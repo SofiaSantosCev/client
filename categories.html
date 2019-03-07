@@ -63,7 +63,7 @@
 		//comprobar token
 
 		$.ajax({
-			url:"http://localhost/gpass-server/public/index.php/api/categories",
+			url:"http://localhost/server/public/index.php/api/categories",
 			type: "GET",
 
 			headers:{
@@ -85,7 +85,7 @@
 		function create() { 
 			var name = $("#name").val();
 			$.ajax({
-				url:"http://localhost/gpass-server/public/index.php/api/categories",
+				url:"http://localhost/server/public/index.php/api/categories",
 				type: "POST",
 
 				headers: {
@@ -113,7 +113,7 @@
 			var newName = $("#newName"+$id).val();
 
 			$.ajax({
-				url:"http://localhost/gpass-server/public/index.php/api/categories/"+$id,
+				url:"http://localhost/server/public/index.php/api/categories/"+$id,
 				type: "PUT",
 
 				headers: {
@@ -149,7 +149,7 @@
 
         function deleteCategory($id){
         	$.ajax({
-				url:"http://localhost/gpass-server/public/index.php/api/categories/"+$id,
+				url:"http://localhost/server/public/index.php/api/categories/"+$id,
 				type: "DELETE",
 
 				headers: {
