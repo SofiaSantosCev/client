@@ -111,7 +111,6 @@
 
 		function modify($id){
 			var newName = $("#newName"+$id).val();
-			console.log($("#newName"+$id).val());
 
 			$.ajax({
 				url:"http://localhost/gpass-server/public/index.php/api/categories/"+$id,
@@ -144,8 +143,30 @@
 			}
 
 			for(var category in categories){
-			$('#categoryList').append('<tr><td>'+categories[category].name+'</td><td><input type="text" class="form-control" id="newName'+categories[category].id+'" value='+categories[category].name+'></td><td><button  id="modifyButton" onclick="modify('+categories[category].id+')" class="btn btn-primary">Modify</button></td><td><button id="deleteButton'+categories[category].id+'" onclick="delete('+categories[category].id+')" class="btn btn-danger">Delete</button></td></tr>');
+			$('#categoryList').append('<tr><td>'+categories[category].name+'</td><td><input type="text" class="form-control" id="newName'+categories[category].id+'" value='+categories[category].name+'></td><td><button  id="modifyButton" onclick="modify('+categories[category].id+')" class="btn btn-primary">Modify</button></td><td><button id="deleteButton'+categories[category].id+'" onclick="deleteCategory('+categories[category].id+')" class="btn btn-danger">Delete</button></td></tr>');
 			}
+        }
+
+        function deleteCategory($id){
+        	$.ajax({
+				url:"http://localhost/gpass-server/public/index.php/api/categories/"+$id,
+				type: "DELETE",
+
+				headers: {
+					'Authorization': localStorage.getItem("token")
+				},
+
+				success: function(response){
+					location.reload();
+					console.log(response.responseText);
+				},
+				
+				error: function(response) {
+					
+					$('#error').text(response.responseJSON.text);
+					$('#error').removeClass('hidden');
+				}
+			})
         }
 
 	</script>
